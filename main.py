@@ -19,8 +19,6 @@ def add_book(title, author, year):
                 "available": None
             }
             print(f"Информация о книге '{title}' успешно обновлена.\n")
-        else:
-            print(f"Добавление/обновление книги '{title}' отменено.\n")
     else:
         library[title] = {
             "author": author,
@@ -28,6 +26,19 @@ def add_book(title, author, year):
             "available": None
         }
         print(f"Книга '{title}' успешно добавлена в библиотеку.\n")
+
+
+def remove_book(title):
+    """
+    Удаляет книгу из библиотеки по её названию.
+    
+    :param title: Название книги
+    """
+    if title in library:
+        del library[title]
+        print(f"Книга '{title}' успешно удалена из библиотеки.\n")
+    else:
+        print(f"Книга '{title}' не найдена в библиотеке.\n")
 
 
 def book_list_view(library):
@@ -49,7 +60,15 @@ def book_list_view(library):
 # Добавляем несколько книг
 add_book("Преступление и наказание", "Фёдор Достоевский", 1866)
 add_book("Мастер и Маргарита", "Михаил Булгаков", 1967)
-add_book("Преступление и наказание", "Ф.М. Достоевский", 1866)  # Попытка повторного добавления
 
 # Выводим список всех книг
+book_list_view(library)
+
+# Попытка удалить книгу
+remove_book("Преступление и наказание")
+
+# Попытка удалить несуществующую книгу
+remove_book("Не существующая книга")
+
+# Выводим обновлённый список
 book_list_view(library)
