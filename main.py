@@ -16,14 +16,14 @@ def add_book(title, author, year):
             library[title] = {
                 "author": author,
                 "year": year,
-                "available": None
+                "available": None  # Не определено при добавлении
             }
             print(f"Информация о книге '{title}' успешно обновлена.\n")
     else:
         library[title] = {
             "author": author,
             "year": year,
-            "available": None
+            "available": True  # По умолчанию книга доступна
         }
         print(f"Книга '{title}' успешно добавлена в библиотеку.\n")
 
@@ -41,34 +41,83 @@ def remove_book(title):
         print(f"Книга '{title}' не найдена в библиотеке.\n")
 
 
+def issue_book(title):
+    """
+    Отмечает книгу как выданную (available = False).
+    
+    :param title: Название книги
+    """
+    if title in library:
+        if library[title]["available"] is True or library[title]["available"] is None:
+            library[title]["available"] = False
+            print(f"Книга '{title}' успешно выдана.\n")
+        else:
+            print(f"Книга '{title}' уже выдана.\n")
+    else:
+        print(f"Книга '{title}' не найдена в библиотеке.\n")
+
+
+def return_book(title):
+    """
+    Отмечает книгу как возвращённую (available = True).
+    
+    :param title: Название книги
+    """
+    if title in library:
+        if library[title]["available"] is False or library[title]["available"] is None:
+            library[title]["available"] = True
+            print(f"Книга '{title}' успешно возвращена в библиотеку.\n")
+        else:
+            print(f"Книга '{title}' уже находится в библиотеке.\n")
+    else:
+        print(f"Книга '{title}' не найдена в библиотеке.\n")
+
+
 def book_list_view(library):
     """
-    Выводит список всех книг в библиотеке.
+    Выводит список всех книг в библиотеке с их статусом.
     """
     if not library:
         print("В библиотеке пока нет книг.")
         return
 
-    print("Список книг в библиотеке:")
-    for title in library:
-        print(f"- {title}")
+    print("=== Список книг в библиотеке ===")
+    for title, info in library.items():
+        status = "в наличии"
+        if info["available"] is False:
+            status = "выдана"
+        elif info["available"] is None:
+            status = "статус не определён"
+        print(f"- {title} ({info['author']}, {info['year']}) — статус: {status}")
     print()
 
 
-# === Пример использования ===
+# === Тело программы ===
+
+# Вывод начального состояния библиотеки
+book_list_view(library)
 
 # Добавляем несколько книг
 add_book("Преступление и наказание", "Фёдор Достоевский", 1866)
 add_book("Мастер и Маргарита", "Михаил Булгаков", 1967)
 
-# Выводим список всех книг
+# Выводим список после добавления
 book_list_view(library)
 
-# Попытка удалить книгу
-remove_book("Преступление и наказание")
+# Выдаем одну из книг
+issue_book("Преступление и наказание")
 
-# Попытка удалить несуществующую книгу
-remove_book("Не существующая книга")
+# Пытаемся снова выдать эту же книгу
+issue_book("Преступление и наказание")
 
-# Выводим обновлённый список
+# Возвращаем книгу
+return_book("Преступление и наказание")
+
+# Пытаемся снова вернуть эту же книгу
+return_book("Преступление и наказание")
+
+# Удаляем книгу
+remove_book("Мастер и Маргарита")
+
+# Выводим финальный список
 book_list_view(library)
